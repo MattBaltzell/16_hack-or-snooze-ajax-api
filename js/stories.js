@@ -24,7 +24,8 @@ function generateStoryMarkup(story) {
 
   const hostName = story.getHostName();
   return $(`
-      <li id="${story.storyId}">
+  <li id="${story.storyId}">
+  <i class="far fa-bookmark"></i>
         <a href="${story.url}" target="a_blank" class="story-link">
           ${story.title}
         </a>
@@ -50,3 +51,15 @@ function putStoriesOnPage() {
 
   $allStoriesList.show();
 }
+
+async function submitNewStory(e){
+  e.preventDefault()
+  const author = $('#story-author').val()
+  const title = $('#story-title').val()
+  const url = $('#story-url').val()
+  const story = await storyList.addStory(currentUser,{title, author, url})
+  const $story = generateStoryMarkup(story)
+  $allStoriesList.prepend($story);
+}
+
+$submitStoryForm.on('submit', submitNewStory)
