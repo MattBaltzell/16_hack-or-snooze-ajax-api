@@ -25,7 +25,7 @@ class Story {
 
   getHostName() {
     // UNIMPLEMENTED: complete this function!
-    return "hostname.com";
+    return this.url;
   }
 }
 
@@ -206,5 +206,34 @@ class User {
       console.error("loginViaStoredCredentials failed", err);
       return null;
     }
+  }
+
+  async addFavorite(story){
+    const token = currentUser.loginToken
+    const response = await axios({
+      url: `${BASE_URL}/users/${currentUser.username}/favorites/${story.storyId}`,
+      method: "POST",
+      data: {token}
+    });
+   
+
+    console.log(response)
+
+    return currentUser
+
+  }
+
+  async removeFavorite(story){
+    const token = currentUser.loginToken
+    const response = await axios({
+      url: `${BASE_URL}/users/${currentUser.username}/favorites/${story.storyId}`,
+      method: "DELETE",
+      data: {token}
+    });
+    console.log(response)
+   
+    return currentUser
+    
+
   }
 }

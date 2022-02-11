@@ -24,16 +24,14 @@ function generateStoryMarkup(story) {
 
   const hostName = story.getHostName();
   return $(`
-  <li id="${story.storyId}">
-  <i class="far fa-bookmark"></i>
-        <a href="${story.url}" target="a_blank" class="story-link">
-          ${story.title}
-        </a>
-        <small class="story-hostname">(${hostName})</small>
-        <small class="story-author">by ${story.author}</small>
-        <small class="story-user">posted by ${story.username}</small>
-      </li>
-    `);
+    <li id="${story.storyId}">
+      <i class="far fa-bookmark" id="favorite-icon"></i>
+      <a href="${story.url}" target="a_blank" class="story-link">${story.title}</a>
+      <small class="story-hostname">(${hostName})</small>
+      <small class="story-author">by ${story.author}</small>
+      <small class="story-user">posted by ${story.username}</small>
+    </li>
+  `);
 }
 
 /** Gets list of stories from server, generates their HTML, and puts on page. */
@@ -63,3 +61,27 @@ async function submitNewStory(e){
 }
 
 $submitStoryForm.on('submit', submitNewStory)
+
+
+
+async function toggleFavorite(evt){
+  console.log($(this))
+
+  const id = $(this).closest('li').attr('id')
+  const story = storyList.stories.find(st=>st.storyId === id)
+  const {author,title,url,username} = story
+  console.log(currentUser.favorites.some(st=> st.storyID === story.storyID))
+  
+  if(currentUser.favorites.some(st=> st.storyID === story.storyID)){currentUser.removeFavorite(story)}
+
+  else{
+
+    currentUser.addFavorite(story)
+  }
+  // if($(this).hasClass('far')){
+  //   $(this).removeClass('far')
+  //   $(this).addClass('fas')
+  // }
+}
+
+$allStoriesList.on('click',"#favorite-icon", toggleFavorite)
