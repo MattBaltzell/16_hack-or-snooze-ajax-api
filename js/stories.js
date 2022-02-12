@@ -8,7 +8,6 @@ let storyList;
 async function getAndShowStoriesOnStart() {
   storyList = await StoryList.getStories();
   $storiesLoadingMsg.remove();
-
   putStoriesOnPage();
 }
 
@@ -18,14 +17,21 @@ async function getAndShowStoriesOnStart() {
  *
  * Returns the markup for the story.
  */
+ function showIcon() {
+  const icon = `<i class="${currentUser.favorites.some(st=> st.storyId === story.storyId) ? 'fas':'far'} fa-bookmark" id="favorite-icon"></i>`
+ 
+  return icon;
 
+}
 function generateStoryMarkup(story) {
   // console.debug("generateStoryMarkup", story);
 
   const hostName = story.getHostName();
+  
+
   return $(`
     <li id="${story.storyId}">
-      <i class="far fa-bookmark" id="favorite-icon"></i>
+      ${currentUser ? showIcon() : ''}
       <a href="${story.url}" target="a_blank" class="story-link">${story.title}</a>
       <small class="story-hostname">(${hostName})</small>
       <small class="story-author">by ${story.author}</small>
@@ -65,23 +71,35 @@ $submitStoryForm.on('submit', submitNewStory)
 
 
 async function toggleFavorite(evt){
-  console.log($(this))
 
-  const id = $(this).closest('li').attr('id')
+  const id = $(evt.target).closest('li').attr('id')
   const story = storyList.stories.find(st=>st.storyId === id)
-  const {author,title,url,username} = story
-  console.log(currentUser.favorites.some(st=> st.storyID === story.storyID))
   
-  if(currentUser.favorites.some(st=> st.storyID === story.storyID)){currentUser.removeFavorite(story)}
-
-  else{
-
-    currentUser.addFavorite(story)
+  if(evt.target.closest('i').classList.contains('fas')){
+    await currentUser.removeFavorite(story)
+    $(evt.target).closest('i').toggleClass('far fas')
   }
-  // if($(this).hasClass('far')){
-  //   $(this).removeClass('far')
-  //   $(this).addClass('fas')
-  // }
+  else {
+    await currentUser.addFavorite(story)
+    $(evt.target).closest('i').toggleClass('far fas')
+  }
+  
 }
+
+async function putFavoritesOnPage() {
+  console.log(currentUser.favorites.length)
+ 
+  $allStoriesList.empty();
+
+  // loop through all of our stories and generate HTML for them
+  for (let story of currentUser.favorites) {
+    const $story = generateStoryMarkup(story);
+    $allStoriesList.append($story);
+  }
+
+  $allStoriesList.show();
+}
+
+
 
 $allStoriesList.on('click',"#favorite-icon", toggleFavorite)

@@ -24,8 +24,10 @@ class Story {
   /** Parses hostname out of URL and returns it. */
 
   getHostName() {
+
     // UNIMPLEMENTED: complete this function!
-    return this.url;
+    const url = new URL(this.url)
+    return url.hostname;
   }
 }
 
@@ -209,31 +211,30 @@ class User {
   }
 
   async addFavorite(story){
-    const token = currentUser.loginToken
-    const response = await axios({
-      url: `${BASE_URL}/users/${currentUser.username}/favorites/${story.storyId}`,
+    this.favorites.push(story);
+    const token = this.loginToken
+    await axios({
+      url: `${BASE_URL}/users/${this.username}/favorites/${story.storyId}`,
       method: "POST",
       data: {token}
     });
-   
-
-    console.log(response)
-
-    return currentUser
 
   }
 
   async removeFavorite(story){
-    const token = currentUser.loginToken
-    const response = await axios({
-      url: `${BASE_URL}/users/${currentUser.username}/favorites/${story.storyId}`,
+    this.favorites = this.favorites.filter(st=> st.storyId === story.storyId);
+    const token = this.loginToken
+    await axios({
+      url: `${BASE_URL}/users/${this.username}/favorites/${story.storyId}`,
       method: "DELETE",
       data: {token}
     });
-    console.log(response)
-   
-    return currentUser
     
-
   }
+
+
+  isFavorite(story){
+    return this.favorite.some(st=>st.storyId === story.storyId)
+  }
+
 }

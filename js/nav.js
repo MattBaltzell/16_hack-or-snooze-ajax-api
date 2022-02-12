@@ -42,3 +42,13 @@ function navSubmitClick(){
 }
 
 $navSubmit.on('click', navSubmitClick)
+
+
+
+function navFavStories(){
+  hidePageComponents();
+  if(currentUser.favorites.length === 0) return
+  putFavoritesOnPage()
+}
+
+$navFavorites.on('click', navFavStories)
