@@ -79,7 +79,6 @@ class StoryList {
     // UNIMPLEMENTED: complete this function!
     
     const token = user.loginToken
-   
     const res = await axios({
       url: `${BASE_URL}/stories`,
       method: "POST",
@@ -88,11 +87,32 @@ class StoryList {
 
 
     const story = new Story(res.data.story)
+    this.stories.unshift(story);
+    user.ownStories.unshift(story);
 
     return story;
 
   }
+  
+  async removeStory(user, storyId) {
+    // const token = user.loginToken;
+    await axios({
+      url: `${BASE_URL}/stories/${storyId}`,
+      method: "DELETE",
+      data: { token: user.loginToken }
+    });
+    
+    // filter out the story whose ID we are removing
+    this.stories = this.stories.filter(story => story.storyId !== storyId);
+    
+    // do the same thing for the user's list of stories & their favorites
+    user.ownStories = user.ownStories.filter(s => s.storyId !== storyId);
+    user.favorites = user.favorites.filter(s => s.storyId !== storyId);
+  }
 }
+
+
+
 
 
 /******************************************************************************
@@ -222,19 +242,19 @@ class User {
   }
 
   async removeFavorite(story){
-    this.favorites = this.favorites.filter(st=> st.storyId === story.storyId);
+    this.favorites = this.favorites.filter(st=> st.storyId !== story.storyId);
+
     const token = this.loginToken
     await axios({
       url: `${BASE_URL}/users/${this.username}/favorites/${story.storyId}`,
       method: "DELETE",
       data: {token}
-    });
-    
+    });   
   }
 
 
   isFavorite(story){
-    return this.favorite.some(st=>st.storyId === story.storyId)
+    return this.favorites.some(st=>(st.storyId === story.storyId))
   }
 
 }

@@ -32,12 +32,14 @@ function updateNavOnLogin() {
   $(".main-nav-links").show();
   $navLogin.hide();
   $navLogOut.show();
+  $navMain.show();
   $navUserProfile.text(`${currentUser.username}`).show();
 }
 
 
 /** Show submit story form on click on "submit" */
 function navSubmitClick(){
+  hidePageComponents();
   $submitStoryForm.show()
 }
 
@@ -47,8 +49,23 @@ $navSubmit.on('click', navSubmitClick)
 
 function navFavStories(){
   hidePageComponents();
-  if(currentUser.favorites.length === 0) return
   putFavoritesOnPage()
 }
 
-$navFavorites.on('click', navFavStories)
+
+function navMyStories(){
+  hidePageComponents();
+  $myStoriesList.empty()
+
+  if(currentUser.ownStories.length === 0) {
+    const $message = `<p>No stories added!</p>`
+    $myStoriesList.append($message)
+    return $myStoriesList.show();
+  }
+  
+  putOwnStoriesOnPage()
+}
+
+
+$body.on('click', '#nav-favorites' ,navFavStories)
+$navMyStories.on('click', navMyStories)

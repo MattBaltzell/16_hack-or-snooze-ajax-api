@@ -10,6 +10,13 @@
   margin: 10px 0;
 }
 
+#fav-stories-list,
+#my-stories-list {
+  list-style: none;
+  padding-left: 26px;
+}
+
+
 #stories-loading-msg {
   font-weight: bold;
   font-size: 150%;
@@ -36,4 +43,8 @@
 
 .story-user {
   display: block;
+}
+
+.trash-can i:hover{
+  color:rgb(226, 0, 0);
 }
