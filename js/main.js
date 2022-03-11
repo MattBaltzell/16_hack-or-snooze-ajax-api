@@ -1,22 +1,23 @@
-"use strict";
+'use strict';
 
 // So we don't have to keep re-finding things on page, find DOM elements once:
 
-const $body = $("body");
+const $body = $('body');
 
 const $storiesLoadingMsg = $('#stories-loading-msg');
 const $allStoriesList = $('#all-stories-list');
 const $favStoriesList = $('#fav-stories-list');
 const $myStoriesList = $('#my-stories-list');
+const $userProfile = $('#user-profile');
 
 const $loginForm = $('#login-form');
 const $signupForm = $('#signup-form');
 const $submitStoryForm = $('#submit-story-form');
 
-const $navMain = $('.nav-main')
-const $navSubmit = $('#nav-submit')
-const $navFavorites = $('#nav-favorites')
-const $navMyStories = $('#nav-mystories')
+const $navMain = $('.nav-main');
+const $navSubmit = $('#nav-submit');
+const $navFavorites = $('#nav-favorites');
+const $navMyStories = $('#nav-mystories');
 const $navLogin = $('#nav-login');
 const $navUserProfile = $('#nav-user-profile');
 const $navLogOut = $('#nav-logout');
@@ -31,18 +32,19 @@ function hidePageComponents() {
     $allStoriesList,
     $favStoriesList,
     $myStoriesList,
+    $userProfile,
     $loginForm,
     $signupForm,
     $submitStoryForm,
   ];
-  components.forEach(c => c.hide());
+  components.forEach((c) => c.hide());
 }
 
 /** Overall function to kick off the app. */
 
 async function start() {
-  console.debug("start");
-  $navMain.hide()
+  console.debug('start');
+  $navMain.hide();
 
   // "Remember logged-in user" and log in, if credentials in localStorage
   await checkForRememberedUser();
@@ -54,8 +56,10 @@ async function start() {
 
 // Once the DOM is entirely loaded, begin the app
 
-console.warn("HEY STUDENT: This program sends many debug messages to" +
-  " the console. If you don't see the message 'start' below this, you're not" +
-  " seeing those helpful debug messages. In your browser console, click on" +
-  " menu 'Default Levels' and add Verbose");
+console.warn(
+  'HEY STUDENT: This program sends many debug messages to' +
+    " the console. If you don't see the message 'start' below this, you're not" +
+    ' seeing those helpful debug messages. In your browser console, click on' +
+    " menu 'Default Levels' and add Verbose"
+);
 $(start);
