@@ -221,23 +221,21 @@ class User {
 
   async addFavorite(story) {
     this.favorites.push(story);
-    const token = this.loginToken;
-    await axios({
-      url: `${BASE_URL}/users/${this.username}/favorites/${story.storyId}`,
-      method: 'POST',
-      data: { token },
-    });
+    await this.favoritesApiCall(story, 'POST');
   }
 
   async removeFavorite(story) {
     this.favorites = this.favorites.filter(
       (st) => st.storyId !== story.storyId
     );
+    await this.favoritesApiCall(story, 'DELETE');
+  }
 
+  async favoritesApiCall(story, method) {
     const token = this.loginToken;
     await axios({
       url: `${BASE_URL}/users/${this.username}/favorites/${story.storyId}`,
-      method: 'DELETE',
+      method: method,
       data: { token },
     });
   }
