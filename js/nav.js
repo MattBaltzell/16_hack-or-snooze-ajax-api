@@ -26,7 +26,6 @@ $navLogin.on('click', navLoginClick);
 /** When a user first logins in, update the navbar to reflect that. */
 function updateNavOnLogin() {
   console.debug('updateNavOnLogin');
-  $('.main-nav-links').show();
   $navLogin.hide();
   $navLogOut.show();
   $navMain.show();
@@ -44,8 +43,11 @@ $navSubmit.on('click', navSubmitClick);
 /** Show user's favorited stories on click on "favorites" */
 function navFavStories() {
   hidePageComponents();
+  $favStoriesList.empty();
   putFavoritesOnPage();
 }
+
+$navFavorites.on('click', navFavStories);
 
 /** Show user's created stories on click on "my stories" */
 function navMyStories() {
@@ -54,7 +56,6 @@ function navMyStories() {
   putOwnStoriesOnPage();
 }
 
-$body.on('click', '#nav-favorites', navFavStories);
 $navMyStories.on('click', navMyStories);
 
 /** Show user's profile on click on user's username */
