@@ -76,20 +76,6 @@ function putStoriesOnPage() {
   $allStoriesList.show();
 }
 
-/** Deletes this story from server, and puts updated story list on page. */
-
-async function deleteStory(evt) {
-  console.debug('deleteStory');
-
-  const $closestLi = $(evt.target).closest('li');
-  const storyId = $closestLi.attr('id');
-
-  await storyList.removeStory(currentUser, storyId);
-  putOwnStoriesOnPage();
-}
-
-$myStoriesList.on('click', '.trash-can', deleteStory);
-
 /** Submits story form. Adds new story onto story list on the server. */
 
 async function submitNewStory(e) {
@@ -109,6 +95,42 @@ async function submitNewStory(e) {
 }
 
 $submitStoryForm.on('submit', submitNewStory);
+
+/** Deletes this story from server, and puts updated story list on page. */
+
+async function deleteStory(evt) {
+  console.debug('deleteStory');
+  const $closestLi = $(evt.target).closest('li');
+  const storyId = $closestLi.attr('id');
+
+  await storyList.removeStory(currentUser, storyId);
+  $myStoriesList.empty();
+  putOwnStoriesOnPage();
+}
+
+$myStoriesList.on('click', '.trash-can', deleteStory);
+
+/** Adds user's own stories list to the page.
+ * - default message if user has no stories
+ */
+
+async function putOwnStoriesOnPage() {
+  hidePageComponents();
+
+  // loop through all of our stories and generate HTML for them
+
+  if (currentUser.ownStories.length === 0) {
+    const $message = `<p>No stories have been added yet!</p>`;
+    $myStoriesList.append($message);
+  } else {
+    for (let story of currentUser.ownStories) {
+      const $story = generateStoryMarkup(story, true);
+      $myStoriesList.append($story);
+    }
+  }
+
+  $myStoriesList.show();
+}
 
 /** Adds or removes favorite from the UI. */
 
@@ -132,8 +154,6 @@ $body.on('click', '#favorite-icon', toggleFavorite);
  */
 
 async function putFavoritesOnPage() {
-  $favStoriesList.empty();
-
   if (currentUser.favorites.length === 0) {
     const $message = `<p>No favorites added!</p>`;
     $favStoriesList.append($message);
@@ -146,26 +166,4 @@ async function putFavoritesOnPage() {
   }
 
   $favStoriesList.show();
-}
-
-/** Adds user's own stories list to the page.
- * - default message if user has no stories
- */
-
-async function putOwnStoriesOnPage() {
-  hidePageComponents();
-  $myStoriesList.empty();
-  // loop through all of our stories and generate HTML for them
-
-  if (currentUser.ownStories.length === 0) {
-    const $message = `<p>No stories have been added yet!</p>`;
-    $myStoriesList.append($message);
-  } else {
-    for (let story of currentUser.ownStories) {
-      const $story = generateStoryMarkup(story, true);
-      $myStoriesList.append($story);
-    }
-  }
-
-  $myStoriesList.show();
 }
