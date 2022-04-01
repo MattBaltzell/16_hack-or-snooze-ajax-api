@@ -57,7 +57,7 @@ function getDeleteBtnHTML() {
 function getIconHTML(story, user) {
   const isFavorite = user.isFavorite(story);
   const iconType = isFavorite ? 'fas' : 'far';
-  return `<span class="favorite-icon"><i class="${iconType} fa-bookmark" id="favorite-icon"></i><span class="trash-can">`;
+  return `<span class="favorite-icon"><i class="${iconType} fa-bookmark" id="favorite-icon"></i></span>`;
 }
 
 /** Gets list of stories from server, generates their HTML, and puts on page. */
